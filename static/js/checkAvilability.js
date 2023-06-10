@@ -2,7 +2,7 @@ let attantion = Prompt();
 document.getElementById("check-avilability-button").addEventListener("click", function(){
 
 let html = `
-<form action="" method="post" novalidate class="needs-validation" style="overflow-x: hidden;">
+<form id="check-avilability-form" action="" method="post" novalidate class="needs-validation" style="overflow-x: hidden;">
 <div class="row" id="reservation-dates-modal">
     <div class="col" style="padding-right: 15px; padding-left: 15px;">
         <label for="start_date" class="form-label">Starting Date</label>
@@ -15,5 +15,30 @@ let html = `
 </div>
 </form>
 `;
-attantion.custome({msg:html, title: "Choose Your Dates"})
+
+
+// Get the CSRF token from the data attribute
+var csrfToken = document.querySelector('script[src="/static/js/checkAvilability.js"]').getAttribute('data-csrf');
+
+attantion.custome({
+    msg:html,
+    title: "Choose Your Dates",
+    callback: function(result) {
+         console.log("called");
+         let form = document.getElementById('check-avilability-form');
+         let formData = new FormData(form)
+         formData.append("csrf_token", csrfToken);
+
+         fetch('/check-avilability-json', {
+            method: "post",
+            body: formData
+         })
+         .then(response => response.json())
+         .then(data => {
+            console.log(data)
+            console.log(data.ok)
+            console.log(data.message)
+         })
+    }
+})
 });

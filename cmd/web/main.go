@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/shimon-git/booking-app/pkg/config"
-	"github.com/shimon-git/booking-app/pkg/handlers"
-	"github.com/shimon-git/booking-app/pkg/render"
+	"github.com/shimon-git/booking-app/internal/config"
+	"github.com/shimon-git/booking-app/internal/handlers"
+	"github.com/shimon-git/booking-app/internal/render"
 )
 
 const portNumber = ":4444"

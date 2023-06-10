@@ -7,11 +7,13 @@ import (
 	"path/filepath"
 	"text/template"
 
-	"github.com/shimon-git/booking-app/pkg/config"
-	"github.com/shimon-git/booking-app/pkg/models"
+	"github.com/justinas/nosurf"
+	"github.com/shimon-git/booking-app/internal/config"
+	"github.com/shimon-git/booking-app/internal/models"
 )
 
-func AddDefaultData(templateData *models.TemplateData) *models.TemplateData {
+func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.TemplateData {
+	templateData.CSRFToken = nosurf.Token(r )
 	return templateData
 }
 
@@ -22,7 +24,7 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, templateName string, templateData *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, templateName string, templateData *models.TemplateData) {
 	var templateCache map[string]*template.Template
 	if app.UseCache {
 		// create template cache
@@ -38,7 +40,7 @@ func RenderTemplate(w http.ResponseWriter, templateName string, templateData *mo
 	}
 
 	buf := new(bytes.Buffer)
-
+	templateData = AddDefaultData(templateData, r)
 	err := tmpl.Execute(buf, templateData)
 	if err != nil {
 		log.Println("Error writing template to browser", err)

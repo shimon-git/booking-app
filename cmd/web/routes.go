@@ -5,8 +5,8 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
-	"github.com/shimon-git/booking-app/pkg/config"
-	"github.com/shimon-git/booking-app/pkg/handlers"
+	"github.com/shimon-git/booking-app/internal/config"
+	"github.com/shimon-git/booking-app/internal/handlers"
 )
 
 func routes(app *config.AppConfig) http.Handler {
@@ -20,8 +20,12 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/contact", handlers.Repo.Contact)
 	mux.Get("/generals-quarters", handlers.Repo.Generals)
 	mux.Get("/majors-suite", handlers.Repo.Majors)
-	mux.Get("/check-avilability", handlers.Repo.Avilability)
+
 	mux.Get("/make-reservation", handlers.Repo.Reservation)
+
+	mux.Get("/check-avilability", handlers.Repo.Avilability)
+	mux.Post("/check-avilability", handlers.Repo.PostAvilability)
+	mux.Post("/check-avilability-json", handlers.Repo.JsonAvilability)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
