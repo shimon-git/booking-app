@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/shimon-git/booking-app/internal/config"
+	"github.com/shimon-git/booking-app/internal/forms"
 	"github.com/shimon-git/booking-app/internal/models"
 	"github.com/shimon-git/booking-app/internal/render"
 )
@@ -73,7 +74,38 @@ func (m *Reposetory) Contact(w http.ResponseWriter, r *http.Request) {
 
 // Contact renders the contact page
 func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{})
+	render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+// PostReservation handle  the posting of reservation form
+func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	reservation := models.Reservation{
+		FirstName: r.Form.Get("first_name"),
+		LastName:  r.Form.Get("first_name"),
+		Email:     r.Form.Get("email"),
+		Phone:     r.Form.Get("phone"),
+	}
+
+	form := forms.New(r.PostForm)
+
+	form.Has("first_name", r)
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
 }
 
 // PostAvilability renders the check-avilability page
