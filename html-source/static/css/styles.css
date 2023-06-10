@@ -1,0 +1,40 @@
+.my-footer {
+    height: 5em;
+    padding: 1em;
+    background-color: #163b65;
+    color: #fff;
+    margin-top: 1.5em;
+    font-size: 80%;
+}
+
+.invisible-hr {
+    border: none;
+    height: 1px;
+    background-color: transparent;
+}
+
+/* override styles here */
+.notie-container {
+    box-shadow: none;
+}
+body {
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.container {
+    max-width: 100%; /* Set maximum width to 100% */
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.row {
+    margin-left: -15px;
+    margin-right: -15px;
+}
+
+.room-image {
+    margin-top: 1em;
+    max-width: 40%;
+}

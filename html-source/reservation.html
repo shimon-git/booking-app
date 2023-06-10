@@ -4,24 +4,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Now</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-
-    <style>
-        .my-footer {
-            height: 5em;
-            padding: 1em;
-            background-color: #163b65;
-            color: #fff;
-            margin-top: 1.5em;
-            font-size: 80%;
-        }
-
-        .room-image {
-            margin-top: 1em;
-            max-width: 40%;
-        }
-    </style>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.3/dist/css/datepicker-bs5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">
 </head>
 
 <body>
@@ -71,30 +58,48 @@
             <div class="col-3"></div>
             <div class="col-md-6">
                 <h1 class="text-center mt-5">Check For Avilability</h1>
-                <form action="reservation.html" method="get">
-                    <div class="row">
+                
+                <form action="reservation.html" method="get" novalidate class="needs-validation">
+                    <div class="row" id="reservation-date">
                         <div class="col">
                             <label for="start_date" class="form-label">Starting Date</label>
-                            <input type="date" class="form-control" id="start_date" name="start_date" required aria-describedby="emailHelp">
-                            <div id="emailHelp" class="form-text">
-                                Enter your starting date in form of YYYY-MM-DD.
-                            </div>
+                            <input type="text" class="form-control" id="start_date" name="start_date" required autocomplete="off" placeholder="Arrival date">
                         </div>
 
                         <div class="col">
                             <label for="end_date" class="form-label">Ending Date</label>
-                            <input type="date" class="form-control" id="end_date" name="end_date" required aria-describedby="emailHelp">
-                            <div id="emailHelp" class="form-text">
-                                Enter your ending date in form of YYYY-MM-DD.
-                            </div>
+                            <input type="text" class="form-control" id="end_date" name="end_date" required autocomplete="off" placeholder="Departure">
                         </div>
                       </div>
-
-                    <button type="submit" class="btn btn-primary">Check Avilability</button>
-                  </form>
+                      <hr class="invisible-hr">
+                      <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Check Availability</button>
+                      </div>
+                    </form>
             </div>
         </div>
     </div>
+
+
+<!--
+    Test Button
+-->
+
+<div class="container">
+<div class="row">
+    <div class="col">
+        <button class="btn btn-outline-secondary" id="testButton">Clik Me</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <p id="testPar">
+            Some Text....
+        </p>
+    </div>
+</div>
+</div>
+
 
     <!--
         my footer
@@ -112,7 +117,21 @@
     </div>
 
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.3/dist/js/datepicker-full.min.js"></script>
+    <script src="https://unpkg.com/notie"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+
+
+
+
+
+    <!--
+        function to addindg toggle functionality to the nav-bar
+    -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const dropdownToggle = document.querySelector(".dropdown-toggle");
@@ -129,10 +148,185 @@
             });
         });
     </script>
+    
+    <!--
+        function to for the forms
+    -->
+    <script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (() => {
+    'use strict'
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
-    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+        }, false)
+    })
+    })()
+    </script>
+
+    <!--
+        DatePicker function
+    -->
+    <script>
+        const elem = document.getElementById('reservation-date');
+        const rangepicker = new DateRangePicker(elem, {
+        // ...options
+        format: "dd-mm-yyyy"
+        }); 
+    </script>
+
+    <!--
+        Functions for alerts
+    -->
+    <script>
+        function notify(msg,msgType) {
+            notie.alert({
+                type: msgType,
+                text: msg,
+            })
+        };
+
+        function notifyModal(title,text,icon,confirmButtonText) {
+            Swal.fire({
+                title: title,
+                html: text,
+                icon: icon,
+                confirmButtonText: confirmButtonText
+            })
+        }
+    </script>
+
+
+<script>
+    function Prompt() {
+        let toast = function(c){
+            const {
+                msg = "",
+                icon = "success",
+                position = "top-end",
+
+            } = c;
+            const Toast = Swal.mixin({
+                toast: true,
+                title: msg,
+                position: position,
+                icon: icon,
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({ })
+        };
+        let success = function(c){
+            const {
+                msg = "",
+                title = "",
+                footer = ""
+            } = c;
+            Swal.fire({
+                icon: 'success',
+                title: title,
+                text: msg,
+                footer: footer,
+            })
+        };
+        let error = function(c){
+            const {
+                msg = "",
+                title = "",
+                footer = ""
+            } = c;
+            Swal.fire({
+                icon: 'error',
+                title: title,
+                text: msg,
+                footer: footer,
+            })
+        };
+        async function custome(c){
+            const {
+                msg = "",
+                title = "",
+            } = c;
+            const { value: formValues } = await Swal.fire({
+                title: title,
+                html: msg,
+                backdrop: false,
+                focusConfirm: false,
+                showCancelButton: true,
+                willOpen: () => {
+                    const elem = document.getElementById("reservation-dates-modal");
+                    const rp = new DateRangePicker(elem,{
+                        format: 'dd-mm-yyyy',
+                        showOnFocus: true,
+                        orientation: 'top',
+                        container: '.modal-dialog',
+                    })
+                },
+                didOpen: () => {
+                    document.getElementById('start').removeAttribute('disabled')
+                    document.getElementById('end').removeAttribute('disabled')
+                },
+                preConfirm: () => {
+                    return [
+                    document.getElementById('start').value,
+                    document.getElementById('end').value
+                    ]
+                }
+            })
+
+            if (formValues) {
+            Swal.fire(JSON.stringify(formValues))
+            }
+        }; 
+        return{
+            toast: toast,
+            success: success,
+            error: error,
+            custome: custome,
+        }
+    }
+</script>
+
+<!--
+    Test Function
+-->
+<script>
+    let attantion = Prompt();
+    document.getElementById("testButton").addEventListener("click", function(){
+
+    let html = `
+    <form action="" method="post" novalidate class="needs-validation" style="overflow-x: hidden;">
+        <div class="row" id="reservation-dates-modal">
+            <div class="col" style="padding-right: 15px; padding-left: 15px;">
+                <label for="start_date" class="form-label">Starting Date</label>
+                <input type="text" class="form-control" id="start" name="start" disabled required autocomplete="off" placeholder="Arrival date" >
+            </div>
+            <div class="col" style="padding-right: 15px; padding-left: 15px;">
+                <label for="end_date" class="form-label">Ending Date</label>
+                <input type="text" class="form-control" id="end" name="end" disabled required autocomplete="off" placeholder="Departure">
+            </div>
+        </div>
+    </form>
+    `;
+        attantion.custome({msg:html, title: "Choose Your Dates"})
+    });
+</script>
+
 </body>
 </html>
