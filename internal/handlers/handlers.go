@@ -74,6 +74,10 @@ func (m *Reposetory) Contact(w http.ResponseWriter, r *http.Request) {
 
 // Contact renders the contact page
 func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
+	var emptyResevation models.Reservation
+	data := make(map[string]interface{})
+	data["reservation"] = emptyResevation
+
 	render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
 		Form: forms.New(nil),
 	})
@@ -88,14 +92,18 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
-		LastName:  r.Form.Get("first_name"),
+		LastName:  r.Form.Get("last_name"),
 		Email:     r.Form.Get("email"),
 		Phone:     r.Form.Get("phone"),
 	}
 
 	form := forms.New(r.PostForm)
 
-	form.Has("first_name", r)
+	//form.Has("first_name", r)
+
+	form.Required("first_name", "last_name", "email", "phone")
+	form.MinLength("first_name", 3, r)
+	form.IsEmail("email")
 	if !form.Valid() {
 		data := make(map[string]interface{})
 		data["reservation"] = reservation
