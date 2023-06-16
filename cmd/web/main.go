@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/shimon-git/booking-app/internal/config"
 	"github.com/shimon-git/booking-app/internal/handlers"
+	"github.com/shimon-git/booking-app/internal/models"
 	"github.com/shimon-git/booking-app/internal/render"
 )
 
@@ -19,6 +21,10 @@ var session *scs.SessionManager
 
 // main is the main application function
 func main() {
+	// what am i going to put in the session
+	gob.Register(models.Reservation{})
+	
+	
 	app.InProduction = false
 
 	session = scs.New()

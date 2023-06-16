@@ -72,6 +72,34 @@ func (m *Reposetory) Contact(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "contact.page.html", &models.TemplateData{})
 }
 
+// PostAvilability renders the check-avilability page
+func (m *Reposetory) PostAvilability(w http.ResponseWriter, r *http.Request) {
+	start := r.Form.Get("start_date")
+	end := r.Form.Get("end_date")
+	w.Write([]byte(fmt.Sprintf("start date is: %s and end date is: %s", start, end)))
+}
+
+type jsonResponse struct {
+	Ok      bool   `json:"ok"`
+	Message string `json:"message"`
+}
+
+// JsonAvilability handles requests for avilability and send json response
+func (m *Reposetory) JsonAvilability(w http.ResponseWriter, r *http.Request) {
+	resp := jsonResponse{
+		Ok:      true,
+		Message: "Available",
+	}
+
+	out, err := json.MarshalIndent(resp, "", "    ")
+	if err != nil {
+		log.Println(err)
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(out)
+}
+
 // Contact renders the contact page
 func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
 	var emptyResevation models.Reservation
@@ -114,32 +142,11 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	m.App.Session.Put(r.Context(), "reservation", reservation)
+	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
 
-// PostAvilability renders the check-avilability page
-func (m *Reposetory) PostAvilability(w http.ResponseWriter, r *http.Request) {
-	start := r.Form.Get("start_date")
-	end := r.Form.Get("end_date")
-	w.Write([]byte(fmt.Sprintf("start date is: %s and end date is: %s", start, end)))
-}
-
-type jsonResponse struct {
-	Ok      bool   `json:"ok"`
-	Message string `json:"message"`
-}
-
-// JsonAvilability handles requests for avilability and send json response
-func (m *Reposetory) JsonAvilability(w http.ResponseWriter, r *http.Request) {
-	resp := jsonResponse{
-		Ok:      true,
-		Message: "Available",
-	}
-
-	out, err := json.MarshalIndent(resp, "", "    ")
-	if err != nil {
-		log.Println(err)
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(out)
+func (m *Reposetory) ReservationSummary(w http.ResponseWriter, r *http.Request) {
+	render.RenderTemplate(w, r, "reservation-summary.page.html", &models.TemplateData{})
 }
