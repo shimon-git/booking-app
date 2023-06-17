@@ -1,0 +1,22 @@
+mode: set
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:24.47,28.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:31.33,33.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:36.67,38.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:41.68,43.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:46.71,48.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:51.69,53.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:56.74,58.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:61.70,63.2 1 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:66.78,70.2 3 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:78.78,85.16 3 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:85.16,87.3 1 0
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:89.2,90.14 2 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:94.74,102.2 4 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:105.78,107.16 2 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:107.16,110.3 2 0
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:111.2,125.19 6 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:125.19,134.3 4 0
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:136.2,137.66 2 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:140.81,142.9 2 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:142.9,147.3 4 1
+github.com/shimon-git/booking-app/internal/handlers/handlers.go:148.2,153.4 4 0

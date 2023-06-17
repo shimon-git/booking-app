@@ -3,11 +3,11 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/shimon-git/booking-app/internal/config"
 	"github.com/shimon-git/booking-app/internal/forms"
+	"github.com/shimon-git/booking-app/internal/helpers"
 	"github.com/shimon-git/booking-app/internal/models"
 	"github.com/shimon-git/booking-app/internal/render"
 )
@@ -34,22 +34,12 @@ func NewHandlers(r *Reposetory) {
 
 // Home is the home page handler
 func (m *Reposetory) Home(w http.ResponseWriter, r *http.Request) {
-	remotIP := r.RemoteAddr
-	m.App.Session.Put(r.Context(), "remote_ip", remotIP)
 	render.RenderTemplate(w, r, "home.page.html", &models.TemplateData{})
 }
 
 // About is the about page handler
 func (m *Reposetory) About(w http.ResponseWriter, r *http.Request) {
-	stringMap := make(map[string]string)
-	stringMap["testAbout"] = "Hello again! --> about page"
-
-	remoteIP := m.App.Session.GetString(r.Context(), "remote_ip")
-	stringMap["remote_ip"] = remoteIP
-
-	render.RenderTemplate(w, r, "about.page.html", &models.TemplateData{
-		StringMap: stringMap,
-	})
+	render.RenderTemplate(w, r, "about.page.html", &models.TemplateData{})
 }
 
 // Generals renders the generals room page
@@ -93,7 +83,8 @@ func (m *Reposetory) JsonAvilability(w http.ResponseWriter, r *http.Request) {
 
 	out, err := json.MarshalIndent(resp, "", "    ")
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -115,7 +106,7 @@ func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
 func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
-		fmt.Println(err)
+		helpers.ServerError(w, err)
 		return
 	}
 	reservation := models.Reservation{
@@ -127,10 +118,8 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 
 	form := forms.New(r.PostForm)
 
-	//form.Has("first_name", r)
-
 	form.Required("first_name", "last_name", "email", "phone")
-	form.MinLength("first_name", 3, r)
+	form.MinLength("first_name", 3)
 	form.IsEmail("email")
 	if !form.Valid() {
 		data := make(map[string]interface{})
@@ -150,7 +139,7 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 func (m *Reposetory) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		log.Println("Cennot get item from session")
+		m.App.ErrorLog.Println("Cennot get item from session")
 		m.App.Session.Put(r.Context(), "error", "Cen't get reservation from session")
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return

@@ -1,0 +1,25 @@
+mode: set
+github.com/shimon-git/booking-app/internal/render/render.go:22.40,24.2 1 1
+github.com/shimon-git/booking-app/internal/render/render.go:26.94,32.2 5 1
+github.com/shimon-git/booking-app/internal/render/render.go:34.123,36.18 2 1
+github.com/shimon-git/booking-app/internal/render/render.go:36.18,39.3 1 0
+github.com/shimon-git/booking-app/internal/render/render.go:39.8,41.3 1 1
+github.com/shimon-git/booking-app/internal/render/render.go:44.2,45.9 2 1
+github.com/shimon-git/booking-app/internal/render/render.go:45.9,48.3 2 0
+github.com/shimon-git/booking-app/internal/render/render.go:50.2,53.16 4 1
+github.com/shimon-git/booking-app/internal/render/render.go:53.16,55.3 1 0
+github.com/shimon-git/booking-app/internal/render/render.go:57.2,58.16 2 1
+github.com/shimon-git/booking-app/internal/render/render.go:58.16,61.3 2 0
+github.com/shimon-git/booking-app/internal/render/render.go:62.2,62.12 1 1
+github.com/shimon-git/booking-app/internal/render/render.go:66.67,73.16 3 1
+github.com/shimon-git/booking-app/internal/render/render.go:73.16,75.3 1 0
+github.com/shimon-git/booking-app/internal/render/render.go:78.2,78.29 1 1
+github.com/shimon-git/booking-app/internal/render/render.go:78.29,82.17 3 1
+github.com/shimon-git/booking-app/internal/render/render.go:82.17,84.4 1 0
+github.com/shimon-git/booking-app/internal/render/render.go:85.3,86.17 2 1
+github.com/shimon-git/booking-app/internal/render/render.go:86.17,88.4 1 0
+github.com/shimon-git/booking-app/internal/render/render.go:90.3,90.23 1 1
+github.com/shimon-git/booking-app/internal/render/render.go:90.23,92.18 2 1
+github.com/shimon-git/booking-app/internal/render/render.go:92.18,94.5 1 0
+github.com/shimon-git/booking-app/internal/render/render.go:97.3,97.23 1 1
+github.com/shimon-git/booking-app/internal/render/render.go:99.2,99.21 1 1

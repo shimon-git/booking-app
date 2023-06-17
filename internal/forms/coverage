@@ -1,0 +1,18 @@
+mode: set
+github.com/shimon-git/booking-app/internal/forms/errors.go:6.44,8.2 1 1
+github.com/shimon-git/booking-app/internal/forms/errors.go:11.42,13.18 2 1
+github.com/shimon-git/booking-app/internal/forms/errors.go:13.18,15.3 1 1
+github.com/shimon-git/booking-app/internal/forms/errors.go:16.2,16.14 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:18.33,23.2 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:26.43,27.31 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:27.31,29.37 2 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:29.37,31.4 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:36.39,38.13 2 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:38.13,40.3 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:40.8,42.3 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:46.29,48.2 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:51.57,53.21 2 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:53.21,56.3 2 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:57.2,57.13 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:61.38,62.42 1 1
+github.com/shimon-git/booking-app/internal/forms/forms.go:62.42,64.3 1 1
