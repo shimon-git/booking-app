@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"fmt"
 	"log"
 	"net/http"
 	"path/filepath"
@@ -12,16 +13,21 @@ import (
 	"github.com/shimon-git/booking-app/internal/models"
 )
 
-func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.TemplateData {
-	templateData.CSRFToken = nosurf.Token(r )
-	return templateData
-}
-
+var functions = template.FuncMap{}
+var pathToTemplate = "./templates"
 var app *config.AppConfig
 
 // NewTemplates sets the config for the remplate package
 func NewTemplates(a *config.AppConfig) {
 	app = a
+}
+
+func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.TemplateData {
+	templateData.Flash = app.Session.PopString(r.Context(), "flash")
+	templateData.Warning = app.Session.PopString(r.Context(), "warning")
+	templateData.Error = app.Session.PopString(r.Context(), "error")
+	templateData.CSRFToken = nosurf.Token(r)
+	return templateData
 }
 
 func RenderTemplate(w http.ResponseWriter, r *http.Request, templateName string, templateData *models.TemplateData) {
@@ -59,7 +65,7 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
 
 	// get all of the files named *.page.html from ./templates
-	pages, err := filepath.Glob("./templates/*.page.html")
+	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.html", pathToTemplate))
 	if err != nil {
 		return myCache, err
 	}
@@ -67,19 +73,18 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 	// range trough all files ending with .page.html
 	for _, page := range pages {
 		name := filepath.Base(page)
-		tmpl, err := template.New(name).ParseFiles(page)
+		tmpl, err := template.New(name).Funcs(functions).ParseFiles(page)
 
 		if err != nil {
 			return myCache, err
 		}
-
-		layouts, err := filepath.Glob("./templates/*.layout.html")
+		layouts, err := filepath.Glob(fmt.Sprintf("%s/*.layout.html", pathToTemplate))
 		if err != nil {
 			return myCache, err
 		}
 
 		if len(layouts) > 0 {
-			tmpl, err = tmpl.ParseGlob("./templates/*.layout.html")
+			tmpl, err = tmpl.ParseGlob(fmt.Sprintf("%s/*.layout.html", pathToTemplate))
 			if err != nil {
 				return myCache, err
 			}

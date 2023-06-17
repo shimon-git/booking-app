@@ -19,7 +19,8 @@
                         <label class="text-danger">{{.}}</label>
                     {{end}}
                     <input class="form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}"
-                     id="first_name" autocomplete="off" type='text' name='first_name' value="{{$res.FirstName}}" required>
+                     id="first_name" autocomplete="off" type='text' name='first_name'
+                     value="{{if $res.FirstName}}{{$res.FirstName}}{{else}}""{{end}}" required>
                 </div>
 
                 <div class="form-group">
@@ -28,7 +29,8 @@
                         <label class="text-danger">{{.}}</label>
                     {{end}}
                     <input class="form-control {{with .Form.Errors.Get "last_name"}} is-invalid {{end}}"
-                           id="last_name" autocomplete="off" type='text' name='last_name' value="{{$res.LastName}}" required>
+                           id="last_name" autocomplete="off" type='text' name='last_name'
+                           value="{{if $res.LastName}}{{$res.LastName}}{{else}}""{{end}}" required>
                 </div>
                 
                 <div class="form-group">
@@ -37,7 +39,8 @@
                         <label class="text-danger">{{.}}</label>
                     {{end}}
                     <input class="form-control {{with .Form.Errors.Get "email"}} is-invalid {{end}}" 
-                        id="email" autocomplete="off" type='text' name='email' value="{{$res.Email}}" required>
+                        id="email" autocomplete="off" type='text' name='email'
+                        value="{{if $res.Email}}{{$res.Email}}{{else}}""{{end}}" required>
                 </div>
 
                 <div class="form-group">
@@ -46,7 +49,8 @@
                         <label class="text-danger">{{.}}</label>
                     {{end}}
                     <input class="form-control {{with .Form.Errors.Get "phone"}} is-invalid {{end}}" 
-                    id="phone" autocomplete="off" type='text' name='phone' value="{{$res.Phone}}" required>
+                    id="phone" autocomplete="off" type='text' name='phone'
+                    value="{{if $res.Phone}}{{$res.Phone}}{{else}}""{{end}}" required>
                 </div>
                 
                 <hr class="invisible-hr">

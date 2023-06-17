@@ -148,5 +148,17 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Reposetory) ReservationSummary(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "reservation-summary.page.html", &models.TemplateData{})
+	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
+	if !ok {
+		log.Println("Cennot get item from session")
+		m.App.Session.Put(r.Context(), "error", "Cen't get reservation from session")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	m.App.Session.Remove(r.Context(), "reservation")
+	data := make(map[string]interface{})
+	data["reservation"] = reservation
+	render.RenderTemplate(w, r, "reservation-summary.page.html", &models.TemplateData{
+		Data: data,
+	})
 }

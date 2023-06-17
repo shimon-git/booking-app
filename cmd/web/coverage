@@ -1,0 +1,11 @@
+mode: set
+github.com/shimon-git/booking-app/cmd/web/main.go:23.13,24.30 1 0
+github.com/shimon-git/booking-app/cmd/web/main.go:24.30,26.3 1 0
+github.com/shimon-git/booking-app/cmd/web/main.go:28.2,35.45 3 0
+github.com/shimon-git/booking-app/cmd/web/main.go:35.45,37.3 1 0
+github.com/shimon-git/booking-app/cmd/web/main.go:41.18,56.16 10 1
+github.com/shimon-git/booking-app/cmd/web/main.go:56.16,59.3 2 0
+github.com/shimon-git/booking-app/cmd/web/main.go:61.2,66.12 6 1
+github.com/shimon-git/booking-app/cmd/web/middlware.go:10.45,20.2 3 1
+github.com/shimon-git/booking-app/cmd/web/middlware.go:23.50,25.2 1 1
+github.com/shimon-git/booking-app/cmd/web/routes.go:12.49,35.2 18 1
