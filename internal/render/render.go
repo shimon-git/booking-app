@@ -19,7 +19,7 @@ var pathToTemplate = "./templates"
 var app *config.AppConfig
 
 // NewTemplates sets the config for the remplate package
-func NewTemplates(a *config.AppConfig) {
+func NewRenderer(a *config.AppConfig) {
 	app = a
 }
 
@@ -31,7 +31,7 @@ func AddDefaultData(templateData *models.TemplateData, r *http.Request) *models.
 	return templateData
 }
 
-func RenderTemplate(w http.ResponseWriter, r *http.Request, templateName string, templateData *models.TemplateData) error {
+func Template(w http.ResponseWriter, r *http.Request, templateName string, templateData *models.TemplateData) error {
 	var templateCache map[string]*template.Template
 	if app.UseCache {
 		// create template cache

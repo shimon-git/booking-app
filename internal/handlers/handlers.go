@@ -6,10 +6,13 @@ import (
 	"net/http"
 
 	"github.com/shimon-git/booking-app/internal/config"
+	"github.com/shimon-git/booking-app/internal/driver"
 	"github.com/shimon-git/booking-app/internal/forms"
 	"github.com/shimon-git/booking-app/internal/helpers"
 	"github.com/shimon-git/booking-app/internal/models"
 	"github.com/shimon-git/booking-app/internal/render"
+	"github.com/shimon-git/booking-app/internal/reposetory"
+	"github.com/shimon-git/booking-app/internal/reposetory/dbrepo"
 )
 
 // Repo the reposetory used by the handlers
@@ -18,12 +21,14 @@ var Repo *Reposetory
 // Reposetory is the reposetory type
 type Reposetory struct {
 	App *config.AppConfig
+	DB  reposetory.DatabaseRepo
 }
 
 // NewRepo creates a new reposetory
-func NewRepo(a *config.AppConfig) *Reposetory {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Reposetory {
 	return &Reposetory{
 		App: a,
+		DB:  dbrepo.NewPostgresRepo(a, db.SQL),
 	}
 }
 
@@ -34,32 +39,32 @@ func NewHandlers(r *Reposetory) {
 
 // Home is the home page handler
 func (m *Reposetory) Home(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "home.page.html", &models.TemplateData{})
+	render.Template(w, r, "home.page.html", &models.TemplateData{})
 }
 
 // About is the about page handler
 func (m *Reposetory) About(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "about.page.html", &models.TemplateData{})
+	render.Template(w, r, "about.page.html", &models.TemplateData{})
 }
 
 // Generals renders the generals room page
 func (m *Reposetory) Generals(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "generals.page.html", &models.TemplateData{})
+	render.Template(w, r, "generals.page.html", &models.TemplateData{})
 }
 
 // Majors renders the majors room page
 func (m *Reposetory) Majors(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "majors.page.html", &models.TemplateData{})
+	render.Template(w, r, "majors.page.html", &models.TemplateData{})
 }
 
 // Avilability renders the check-avilability page
 func (m *Reposetory) Avilability(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "check-avilability.page.html", &models.TemplateData{})
+	render.Template(w, r, "check-avilability.page.html", &models.TemplateData{})
 }
 
 // Contact renders the contact page
 func (m *Reposetory) Contact(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "contact.page.html", &models.TemplateData{})
+	render.Template(w, r, "contact.page.html", &models.TemplateData{})
 }
 
 // PostAvilability renders the check-avilability page
@@ -97,7 +102,7 @@ func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
 	data := make(map[string]interface{})
 	data["reservation"] = emptyResevation
 
-	render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
+	render.Template(w, r, "make-reservation.page.html", &models.TemplateData{
 		Form: forms.New(nil),
 	})
 }
@@ -125,7 +130,7 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 		data := make(map[string]interface{})
 		data["reservation"] = reservation
 
-		render.RenderTemplate(w, r, "make-reservation.page.html", &models.TemplateData{
+		render.Template(w, r, "make-reservation.page.html", &models.TemplateData{
 			Form: form,
 			Data: data,
 		})
@@ -147,7 +152,7 @@ func (m *Reposetory) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 	m.App.Session.Remove(r.Context(), "reservation")
 	data := make(map[string]interface{})
 	data["reservation"] = reservation
-	render.RenderTemplate(w, r, "reservation-summary.page.html", &models.TemplateData{
+	render.Template(w, r, "reservation-summary.page.html", &models.TemplateData{
 		Data: data,
 	})
 }

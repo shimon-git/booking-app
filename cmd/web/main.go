@@ -10,6 +10,7 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/shimon-git/booking-app/internal/config"
+	"github.com/shimon-git/booking-app/internal/driver"
 	"github.com/shimon-git/booking-app/internal/handlers"
 	"github.com/shimon-git/booking-app/internal/helpers"
 	"github.com/shimon-git/booking-app/internal/models"
@@ -23,9 +24,11 @@ var session *scs.SessionManager
 
 // main is the main application function
 func main() {
-	if err := run(); err != nil {
+	db, err := run()
+	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.SQL.Close()
 
 	fmt.Printf("Starting Application on port number: %s...\n", portNumber)
 
@@ -40,9 +43,12 @@ func main() {
 
 }
 
-func run() error {
-	// what am i going to put in the session
+func run() (*driver.DB, error) {
+	// registering our models into the session
 	gob.Register(models.Reservation{})
+	gob.Register(models.User{})
+	gob.Register(models.Room{})
+	gob.Register(models.Restrition{})
 
 	app.InProduction = false
 
@@ -57,17 +63,24 @@ func run() error {
 
 	app.Session = session
 
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=postgres password=ShimonTest123!")
+	if err != nil {
+		log.Fatalf("Cennot connect to th DB dying...\n%v", err)
+		return nil, err
+	}
+	log.Println("Connected to the DB...")
+
 	templateCache, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("Cennot create template cache.")
-		return err
+		return nil, err
 	}
 
 	app.TemplateCache = templateCache
 	app.UseCache = false
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app, db)
 	handlers.NewHandlers(repo)
-	render.NewTemplates(&app)
+	render.NewRenderer(&app)
 	helpers.NewHelpers(&app)
-	return nil
+	return db, nil
 }
