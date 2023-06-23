@@ -9,6 +9,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// DB holds the connection to the DB
 type DB struct {
 	SQL *sql.DB
 }
