@@ -35,6 +35,13 @@ func NewRepo(a *config.AppConfig, db *driver.DB) *Reposetory {
 	}
 }
 
+func NewTestRepo(a *config.AppConfig) *Reposetory {
+	return &Reposetory{
+		App: a,
+		DB:  dbrepo.NewTestingRepo(a),
+	}
+}
+
 // NewHandlers sets the reposetory for the handlers
 func NewHandlers(r *Reposetory) {
 	Repo = r
@@ -166,12 +173,15 @@ func (m *Reposetory) JsonAvilability(w http.ResponseWriter, r *http.Request) {
 func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
 	res, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		helpers.ServerError(w, errors.New("cennot get reservation from the session"))
+		m.App.Session.Put(r.Context(), "error", "cannot get reservation from the session")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
 	}
 
 	room, err := m.DB.GetRoomByID(res.RoomID)
 	if err != nil {
-		helpers.ServerError(w, err)
+		m.App.Session.Put(r.Context(), "error", "can't find room")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -182,12 +192,14 @@ func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
 	dateLayout := "D-M-Y"
 	startDateS, err := helpers.DateTimeToString(res.StartDate, dateLayout)
 	if err != nil {
-		helpers.ServerError(w, err)
+		m.App.Session.Put(r.Context(), "error", "failed to convert the startDate to a string")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 	endDateS, err := helpers.DateTimeToString(res.EndDate, dateLayout)
 	if err != nil {
-		helpers.ServerError(w, err)
+		m.App.Session.Put(r.Context(), "error", "failed to convert the endDate to a string")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 	stringMap := make(map[string]string)
@@ -207,13 +219,15 @@ func (m *Reposetory) Reservation(w http.ResponseWriter, r *http.Request) {
 func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
-		helpers.ServerError(w, errors.New("cannot retrive reservation from the session"))
+		m.App.Session.Put(r.Context(), "error", "cannot retrive reservation from the session")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
 	err := r.ParseForm()
 	if err != nil {
-		helpers.ServerError(w, err)
+		m.App.Session.Put(r.Context(), "error", "can't parse form")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -239,7 +253,8 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 	reservationID, err := m.DB.InsertReservation(reservation)
 	if err != nil {
-		helpers.ServerError(w, err)
+		m.App.Session.Put(r.Context(), "error", "failed to insert a reservation into the DB")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
@@ -256,7 +271,8 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = m.DB.InsertRoomRestriction(restriction); err != nil {
-		helpers.ServerError(w, err)
+		m.App.Session.Put(r.Context(), "error", "failed to insert room restiction into the DB")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
 
