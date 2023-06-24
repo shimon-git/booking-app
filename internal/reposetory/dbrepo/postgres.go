@@ -63,23 +63,25 @@ func (r *postgresDBRepo) CheckAvialibilityForDatesByRoomID(startDate, endDate ti
 	var numOfRows int
 	query := `select count(id) from room_restrictions
 			  where room_id = $1
-			  and $2 < end_date and $3 > start_date;`
+			  and $2 <= end_date and $3 >= start_date;`
 	err := r.DB.QueryRowContext(ctx, query, startDate, endDate).Scan(&numOfRows)
 	if err != nil {
 		return false, err
 	}
 	return numOfRows == 0, nil
 }
+
 // CheckAvialibilityByDatesForAllRooms - return a slice of avilable rooms for a given date
 func (r *postgresDBRepo) CheckAvialibilityByDatesForAllRooms(startDate, endDate time.Time) ([]models.Room, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	var rooms []models.Room
-	query := `select r.id, r.name from rooms r
-			  where r.id not in (
-				select room_id from room_restrictions rr where $1 < rr.end_date and $2 > rr.start_date
-				);`
+	query := `select r.id, r.room_name from rooms r
+	where r.id not in (
+		select room_id from room_restrictions rr 
+		where $1 <= rr.end_date 
+		and $2 >= rr.start_date);`
 	rows, err := r.DB.QueryContext(ctx, query, startDate, endDate)
 	if err != nil {
 		return rooms, err
@@ -96,4 +98,22 @@ func (r *postgresDBRepo) CheckAvialibilityByDatesForAllRooms(startDate, endDate 
 		return rooms, err
 	}
 	return rooms, nil
+}
+
+// GetRoomByID - gets a room by ID.
+func (r *postgresDBRepo) GetRoomByID(id int) (models.Room, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+	defer cancel()
+
+	var room models.Room
+	query := `select id,room_name,created_at,updated_at from rooms where id = $1;`
+	err := r.DB.QueryRowContext(ctx, query, id).Scan(
+		&room.ID,
+		&room.RoomName,
+		&room.CreatedAt,
+		&room.UpdatedAt)
+	if err != nil {
+		return room, err
+	}
+	return room, nil
 }

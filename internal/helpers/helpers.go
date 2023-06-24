@@ -31,10 +31,10 @@ func ServerError(w http.ResponseWriter, err error) {
 }
 
 /*
-DateConvertor - Converting date from string to time.Time object
+StringToDateTime - Converting date from string to time.Time object
 (e.g: "Y-M-D","2023-6-24")
 */
-func DateConvertor(dateFormat string, userDate string) (time.Time, error) {
+func StringToDateTime(dateFormat string, userDate string) (time.Time, error) {
 	var year, day, month int
 	var err error
 	splitedDateFormat := strings.Split(dateFormat, "-")
@@ -47,17 +47,17 @@ func DateConvertor(dateFormat string, userDate string) (time.Time, error) {
 		case "D":
 			day, err = strconv.Atoi(splitedUserDate[idx])
 			if err != nil {
-				return time.Time{}, fmt.Errorf("Cannot Parse the Day\n%v", err)
+				return time.Time{}, fmt.Errorf("cannot Parse the Day\n%v", err)
 			}
 		case "M":
 			month, err = strconv.Atoi(splitedUserDate[idx])
 			if err != nil {
-				return time.Time{}, fmt.Errorf("Cannot Parse the Month\n%v", err)
+				return time.Time{}, fmt.Errorf("cannot Parse the Month\n%v", err)
 			}
 		case "Y":
 			year, err = strconv.Atoi(splitedUserDate[idx])
 			if err != nil {
-				return time.Time{}, fmt.Errorf("Cannot Parse the Year\n%v", err)
+				return time.Time{}, fmt.Errorf("cannot Parse the Year\n%v", err)
 			}
 		default:
 			return time.Time{}, errors.New("invalid time format,\nvalid format needs to contain: {D,Y,M} spereated by '-' as string")
@@ -69,4 +69,30 @@ func DateConvertor(dateFormat string, userDate string) (time.Time, error) {
 	}
 	return time.Date(year, time.Month(month), day, time.Now().Hour(), time.Now().Minute(), time.Now().Second(),
 		time.Now().Nanosecond(), location), nil
+}
+
+func DateTimeToString(dateFormat time.Time, dateLayout string) (string, error) {
+	var year, day, month int
+	var reformatedDate []string
+	splitedDateLayout := strings.Split(dateLayout, "-")
+	if len(splitedDateLayout) != 3 {
+		return "", errors.New("invalid time format,\nvalid format needs to contain: {D,Y,M} spereated by '-' as string")
+	}
+	year = dateFormat.Year()
+	month = int(dateFormat.Month())
+	day = dateFormat.Day()
+
+	for _, datePart := range splitedDateLayout {
+		switch datePart {
+		case "D":
+			reformatedDate = append(reformatedDate, strconv.Itoa(day))
+		case "M":
+			reformatedDate = append(reformatedDate, strconv.Itoa(month))
+		case "Y":
+			reformatedDate = append(reformatedDate, strconv.Itoa(year))
+		default:
+			return "", errors.New("invalid time format,\nvalid format needs to contain: {D,Y,M} spereated by '-' as string")
+		}
+	}
+	return strings.Join(reformatedDate, "-"), nil
 }

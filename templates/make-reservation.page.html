@@ -6,12 +6,23 @@
     <div class="row">
         <div class="col-3"></div>
         <div class="col">
+            {{$res := index .Data "reservation"}}
             <h1 class="mt-3 text-center">Make Reservation</h1>
             <h4 class="mt-3 text-center">Reservation Details</h4>
+            <p class="mt-3 text-center"><strong>
+                Room: {{$res.Room.RoomName}}
+                <br>
+                Arrival: {{index .StringMap "start_date"}}
+                <br>
+                Departure: {{index .StringMap "end_date"}}
+            </strong></p>
 
-            {{$res := index .Data "reservation"}}
+            
             <form method="post" action="" class="needs-validatio" novalidate>
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                <input type="hidden" name="start_date" id="start_date" value='{{index .StringMap "start_date"}}'>
+                <input type="hidden" name="end_date" id="end_date" value='{{index .StringMap "end_date"}}'>
+                <input type="hidden" name="room_id" id="room_id" value="{{$res.RoomID}}">
                 
                 <div class="form-group mt-3">
                     <label for="first_name">First Name:</label>
@@ -53,17 +64,6 @@
                     value="{{if $res.Phone}}{{$res.Phone}}{{else}}""{{end}}" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="start_date">Start Date:</label>
-                    <input class="form-control" type="text" id="start_date" name="start_date">
-                </div>
-
-                <div class="form-group">
-                    <label for="end_date">End Date:</label>
-                    <input class="form-control" type="text" id="end_date" name="end_date">
-                </div>
-
-                <input type="hidden" name="room_id" id="room_id" value="1">
                 
                 <hr class="invisible-hr">
                 <div class="text-center">
