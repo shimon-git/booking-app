@@ -30,7 +30,11 @@ func ServerError(w http.ResponseWriter, err error) {
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
 
-func TimeFormat(dateFormat string, userDate string) (time.Time, error) {
+/*
+DateConvertor - Converting date from string to time.Time object
+(e.g: "Y-M-D","2023-6-24")
+*/
+func DateConvertor(dateFormat string, userDate string) (time.Time, error) {
 	var year, day, month int
 	var err error
 	splitedDateFormat := strings.Split(dateFormat, "-")

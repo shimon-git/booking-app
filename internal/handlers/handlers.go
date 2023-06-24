@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"time"
 
 	"github.com/shimon-git/booking-app/internal/config"
 	"github.com/shimon-git/booking-app/internal/driver"
@@ -114,11 +116,38 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 		helpers.ServerError(w, err)
 		return
 	}
+
+	startDateS := r.Form.Get("start_date")
+	endDateS := r.Form.Get("end_date")
+	dateFormat := "Y-M-D"
+
+	startDateT, err := helpers.DateConvertor(dateFormat, startDateS)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	endDateT, err := helpers.DateConvertor(dateFormat, endDateS)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
 	reservation := models.Reservation{
 		FirstName: r.Form.Get("first_name"),
 		LastName:  r.Form.Get("last_name"),
 		Email:     r.Form.Get("email"),
 		Phone:     r.Form.Get("phone"),
+		StartDate: startDateT,
+		EndDate:   endDateT,
+		RoomID:    roomID,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
 	}
 
 	form := forms.New(r.PostForm)
@@ -134,6 +163,25 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 			Form: form,
 			Data: data,
 		})
+		return
+	}
+	reservationID, err := m.DB.InsertReservation(reservation)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	restriction := models.RoomRestriction{
+		StartDate:     startDateT,
+		EndDate:       endDateT,
+		RoomID:        roomID,
+		ReservationID: reservationID,
+		RestrictionID: 1,
+		CreatedAt:     time.Now(),
+		UpdatedAt:     time.Now(),
+	}
+
+	if err = m.DB.InsertRoomRestriction(restriction); err != nil {
+		helpers.ServerError(w, err)
 		return
 	}
 

@@ -52,6 +52,18 @@
                     id="phone" autocomplete="off" type='text' name='phone'
                     value="{{if $res.Phone}}{{$res.Phone}}{{else}}""{{end}}" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="start_date">Start Date:</label>
+                    <input class="form-control" type="text" id="start_date" name="start_date">
+                </div>
+
+                <div class="form-group">
+                    <label for="end_date">End Date:</label>
+                    <input class="form-control" type="text" id="end_date" name="end_date">
+                </div>
+
+                <input type="hidden" name="room_id" id="room_id" value="1">
                 
                 <hr class="invisible-hr">
                 <div class="text-center">
