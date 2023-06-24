@@ -64,7 +64,7 @@ func (r *postgresDBRepo) CheckAvialibilityForDatesByRoomID(startDate, endDate ti
 	query := `select count(id) from room_restrictions
 			  where room_id = $1
 			  and $2 <= end_date and $3 >= start_date;`
-	err := r.DB.QueryRowContext(ctx, query, startDate, endDate).Scan(&numOfRows)
+	err := r.DB.QueryRowContext(ctx, query, roomID, startDate, endDate).Scan(&numOfRows)
 	if err != nil {
 		return false, err
 	}

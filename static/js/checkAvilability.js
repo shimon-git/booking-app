@@ -28,6 +28,11 @@ attantion.custome({
          let form = document.getElementById('check-avilability-form');
          let formData = new FormData(form)
          formData.append("csrf_token", csrfToken);
+         if (window.location.pathname === "/generals-quarters"){
+            formData.append("room_id", "1");
+         } else if (window.location.pathname === "/majors-suite") {
+            formData.append("room_id", "2");
+         }
 
          fetch('/check-avilability-json', {
             method: "post",
@@ -35,9 +40,25 @@ attantion.custome({
          })
          .then(response => response.json())
          .then(data => {
-            console.log(data)
-            console.log(data.ok)
-            console.log(data.message)
+            if (data.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    showConfirmButton: false,
+                    html: '<p>Room is avialible</p>'
+                        + '<p><a href="/book-room?id='
+                        + data.room_id
+                        + '&s='
+                        + data.start_date
+                        + '&e='
+                        + data.end_date
+                        + '"' 
+                        + 'class="btn btn-primary">Book Now!</a></p>',
+                })
+            } else {
+                attantion.error({
+                    msg: "No Avialibility",
+                })
+            }
          })
     }
 })

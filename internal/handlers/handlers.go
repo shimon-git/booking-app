@@ -110,15 +110,46 @@ func (m *Reposetory) PostAvilability(w http.ResponseWriter, r *http.Request) {
 }
 
 type jsonResponse struct {
-	Ok      bool   `json:"ok"`
-	Message string `json:"message"`
+	Ok        bool   `json:"ok"`
+	Message   string `json:"message"`
+	RoomId    string `json:"room_id"`
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
 }
 
 // JsonAvilability handles requests for avilability and send json response
 func (m *Reposetory) JsonAvilability(w http.ResponseWriter, r *http.Request) {
+	dateLayout := "D-M-Y"
+
+	startDate, err := helpers.StringToDateTime(dateLayout, r.Form.Get("start"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	endDate, err := helpers.StringToDateTime(dateLayout, r.Form.Get("end"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	roomID, err := strconv.Atoi(r.Form.Get("room_id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	avilable, err := m.DB.CheckAvialibilityForDatesByRoomID(startDate, endDate, roomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
 	resp := jsonResponse{
-		Ok:      true,
-		Message: "Available",
+		Ok:        avilable,
+		Message:   "",
+		StartDate: r.Form.Get("start"),
+		EndDate:   r.Form.Get("end"),
+		RoomId:    r.Form.Get("room_id"),
 	}
 
 	out, err := json.MarshalIndent(resp, "", "    ")
@@ -233,6 +264,7 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
 
+// ReservationSummary - display the reservatoin summary page
 func (m *Reposetory) ReservationSummary(w http.ResponseWriter, r *http.Request) {
 	reservation, ok := m.App.Session.Get(r.Context(), "reservation").(models.Reservation)
 	if !ok {
@@ -266,6 +298,7 @@ func (m *Reposetory) ReservationSummary(w http.ResponseWriter, r *http.Request) 
 	})
 }
 
+// ChooseRoom  - display a list of avilable rooms
 func (m *Reposetory) ChooseRoom(w http.ResponseWriter, r *http.Request) {
 	roomID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -278,6 +311,42 @@ func (m *Reposetory) ChooseRoom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res.RoomID = roomID
+	m.App.Session.Put(r.Context(), "reservation", res)
+	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
+}
+
+/*
+BookRoom - takes the room params(start,end,roomid,room name)
+build a session and redirect the user to the make-reservation page
+*/
+func (m *Reposetory) BookRoom(w http.ResponseWriter, r *http.Request) {
+	roomID, err := strconv.Atoi(r.URL.Query().Get("id"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	dateLayout := "D-M-Y"
+	startDate, err := helpers.StringToDateTime(dateLayout, r.URL.Query().Get("s"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	endDate, err := helpers.StringToDateTime(dateLayout, r.URL.Query().Get("e"))
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	room, err := m.DB.GetRoomByID(roomID)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	res := models.Reservation{
+		StartDate: startDate,
+		EndDate:   endDate,
+		RoomID:    roomID,
+		Room:      room,
+	}
 	m.App.Session.Put(r.Context(), "reservation", res)
 	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
 }

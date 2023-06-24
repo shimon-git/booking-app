@@ -109,6 +109,7 @@ async function custome(c){
             const elem = document.getElementById("reservation-dates-modal");
             const rp = new DateRangePicker(elem,{
                 format: 'dd-mm-yyyy',
+                minDate: new Date(),
                 showOnFocus: true,
                 orientation: 'top',
                 container: '.modal-dialog',

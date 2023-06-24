@@ -16,3 +16,16 @@ insert into room_restrictions (start_date,end_date,room_id,reservation_id,restri
 VALUES ('2023-06-01','2023-06-01','2',NULL,'1',make_date(2023,6,24),make_date(2023,6,24));
 
 select id,room_name,created_at,updated_at from rooms where id = 1;
+
+SELECT * FROM rooms;
+
+SELECT CURRENT_DATE;
+
+INSERT INTO rooms (room_name,created_at,updated_at) VALUES 
+('General''s Quarters', CURRENT_DATE, CURRENT_DATE);
+
+DELETE FROM rooms WHERE id = 4;
+
+
+
+SELECT * from restrictions;
