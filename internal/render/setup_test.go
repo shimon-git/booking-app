@@ -33,7 +33,7 @@ func TestMain(m *testing.M) {
 	testApp.Session = session
 
 	app := &testApp
-	NewTemplates(app)
+	NewRenderer(app)
 
 	os.Exit(m.Run())
 }

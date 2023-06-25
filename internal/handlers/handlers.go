@@ -3,8 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -277,6 +279,64 @@ func (m *Reposetory) PostReservation(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m.App.Session.Put(r.Context(), "reservation", reservation)
+
+	dateStartS, err := helpers.DateTimeToString(reservation.StartDate, "D-M-Y")
+	if err != nil {
+		m.App.Session.Put(r.Context(), "error", "failed to convert start date(timt.Time) to a string format")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	dateEndS, err := helpers.DateTimeToString(reservation.StartDate, "D-M-Y")
+	if err != nil {
+		m.App.Session.Put(r.Context(), "error", "failed to convert start date(timt.Time) to a string format")
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		return
+	}
+	// sending email to the client
+	htmlMessage := fmt.Sprintf(`
+	<strong><u>Resevation Confirmation</u></strong>
+	<br>
+	<strong>Dear: %s %s,</strong>
+	<br>
+	<strong>This is confirm your reservation between the dates:</strong>
+	<br>
+	<strong>%s - %s</strong>
+	<br>
+	<strong>Room Details: %s,</strong>
+	<br>
+	<br>
+	<strong>Thank you for choosing Shimon-Bookings</strong>
+	`, reservation.FirstName, reservation.LastName, strings.ReplaceAll(dateStartS, "-", "."), strings.ReplaceAll(dateEndS, "-", "."), reservation.Room.RoomName)
+	msg := models.MailData{
+		To:       reservation.Email,
+		From:     "system@booking.com",
+		Subject:  "Resevation Confirmation",
+		Content:  htmlMessage,
+		Template: "basic.html",
+	}
+	m.App.MailChan <- msg
+
+	// sending email to the owner
+	htmlMessage = fmt.Sprintf(`
+	<h1><u>Resevation Notification</u></h1>
+	<br>
+	<strong>A reservation made for: %s %s</strong>,
+	<br>
+	<strong>A restriction has been added successfuly, dates range: %s - %s</strong>,
+	<br>
+	<strong>Room Details: %s</strong>,
+	<br>
+	<br>
+	<h3>Thank you for choosing Shimon-Bookings</h3>
+	`, reservation.FirstName, reservation.LastName, strings.ReplaceAll(dateStartS, "-", "."), strings.ReplaceAll(dateEndS, "-", "."), reservation.Room.RoomName)
+	msg = models.MailData{
+		To:      "owner@bookings.com",
+		From:    "system@booking.com",
+		Subject: "Resevation Notification",
+		Content: htmlMessage,
+	}
+	m.App.MailChan <- msg
+
 	http.Redirect(w, r, "/reservation-summary", http.StatusSeeOther)
 }
 
@@ -366,3 +426,5 @@ func (m *Reposetory) BookRoom(w http.ResponseWriter, r *http.Request) {
 	m.App.Session.Put(r.Context(), "reservation", res)
 	http.Redirect(w, r, "/make-reservation", http.StatusSeeOther)
 }
+
+

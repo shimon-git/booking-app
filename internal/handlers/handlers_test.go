@@ -12,11 +12,6 @@ import (
 	"github.com/shimon-git/booking-app/internal/models"
 )
 
-type postData struct {
-	Key   string
-	Value string
-}
-
 var theTests = []struct {
 	name       string
 	url        string
@@ -161,7 +156,7 @@ func TestReposetory_PostReservation(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "email=shimon@gmail.com")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "phone=123456")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "room_id=1")
-			
+
 	req = httptest.NewRequest("POST", "/make-reservation", strings.NewReader(reqBody))
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
@@ -172,7 +167,6 @@ func TestReposetory_PostReservation(t *testing.T) {
 	if rr.Code != http.StatusTemporaryRedirect {
 		t.Errorf("PostReservation handler returned wrong response code for invalod start date: got %d, wanted: %d", rr.Code, http.StatusTemporaryRedirect)
 	}
-
 
 	// test for invalid end date
 	reqBody = "start_date=20-6-2030"
@@ -182,7 +176,7 @@ func TestReposetory_PostReservation(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "email=shimon@gmail.com")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "phone=123456")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "room_id=1")
-			
+
 	req = httptest.NewRequest("POST", "/make-reservation", strings.NewReader(reqBody))
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
@@ -194,7 +188,6 @@ func TestReposetory_PostReservation(t *testing.T) {
 		t.Errorf("PostReservation handler returned wrong response code for invalod start date: got %d, wanted: %d", rr.Code, http.StatusTemporaryRedirect)
 	}
 
-
 	// test for invalid room id
 	reqBody = "start_date=20-6-2030"
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "end_date=21-6-2030")
@@ -203,7 +196,7 @@ func TestReposetory_PostReservation(t *testing.T) {
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "email=shimon@gmail.com")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "phone=123456")
 	reqBody = fmt.Sprintf("%s&%s", reqBody, "room_id=invalid")
-			
+
 	req = httptest.NewRequest("POST", "/make-reservation", strings.NewReader(reqBody))
 	ctx = getCtx(req)
 	req = req.WithContext(ctx)
@@ -213,7 +206,7 @@ func TestReposetory_PostReservation(t *testing.T) {
 	handler.ServeHTTP(rr, req)
 	if rr.Code != http.StatusTemporaryRedirect {
 		t.Errorf("PostReservation handler returned wrong response code for invalod start date: got %d, wanted: %d", rr.Code, http.StatusTemporaryRedirect)
-	}	
+	}
 }
 
 func getCtx(req *http.Request) context.Context {
